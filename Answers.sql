@@ -1,7 +1,6 @@
 1. SELECT DISTINCT market FROM gdb023.dim_customer 
 WHERE region = "APAC" and customer = "Atliq Exclusive";
-
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 2. WITH cte1 AS (
 	SELECT COUNT(DISTINCT product_code) as Unique_product_2020,
 		(SELECT COUNT(DISTINCT product_code) 
@@ -14,15 +13,13 @@ SELECT cte1.*,
 		ROUND(((Unique_product_2021-Unique_product_2020)/Unique_product_2020)*100,2) 
         as Percentage_change
 FROM cte1;
-
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 3. SELECT Segment,
 	   COUNT(DISTINCT product_code) as Product_count 
 FROM gdb023.dim_product
 GROUP BY segment
 ORDER BY product_count DESC;
-
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 4. WITH cte1 AS (
 		SELECT Segment,COUNT(DISTINCT product_code) as Product_count_2020
 		FROM gdb023.dim_product P JOIN gdb023.fact_sales_monthly M
@@ -42,8 +39,7 @@ SELECT 	cte1.Segment,
 FROM cte1 JOIN cte2 
 USING (Segment)
 ORDER BY Difference DESC;
-
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 5.(SELECT	p.product_code,
 		p.product,
         MAX(manufacturing_cost) as manufacturing_cost
@@ -61,7 +57,7 @@ USING(product_code)
 GROUP BY p.product_code
 ORDER BY manufacturing_cost ASC
 LIMIT 1);
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 6. SELECT c.customer_code,
 		c.customer,
         ROUND(AVG(d.pre_invoice_discount_pct)*100,2) as avg_discount_pct
@@ -71,7 +67,7 @@ WHERE market = "India" AND d.fiscal_year = 2021
 GROUP BY c.customer_code
 ORDER BY pre_invoice_discount_pct DESC
 LIMIT 5;
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 7. SELECT s.fiscal_year,
 		MONTH(s.date) as fiscal_Month,
 		ROUND(SUM(s.sold_quantity*p.gross_price)/1000000,2) as Gross_sales_amt_mln
@@ -82,7 +78,7 @@ JOIN dim_customer c
 	ON s.customer_code = c.customer_code 
 GROUP BY fiscal_year,fiscal_Month
 ORDER BY s.fiscal_year,fiscal_Month;
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 8. SELECT CASE
 		WHEN MONTH(date) IN (09,10,11) THEN "Q1"
 		WHEN MONTH(date) IN (12,01,02) THEN "Q2"
@@ -94,7 +90,7 @@ FROM gdb023.fact_sales_monthly
 WHERE fiscal_year = 2020
 GROUP BY Quater
 ORDER BY Total_sold_qty_mln DESC; 
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 9. WITH cte1 AS (
       SELECT c.channel,
       sum(s.sold_quantity * g.gross_price) AS gross_sales
@@ -112,7 +108,7 @@ SELECT
   round(gross_sales/1000000,2) AS gross_sales_mln,
   round(gross_sales/(sum(gross_sales) OVER())*100,2) AS pct 
 FROM cte1 ;
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 10. WITH cte1 AS (
     select division, 
     s.product_code, 
